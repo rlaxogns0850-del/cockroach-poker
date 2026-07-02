@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html class="dark" lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>바퀴벌레 포커 // 속임수의 법칙</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=Geist:wght@100..900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  .neon-glow-primary { box-shadow: 0 0 15px rgba(42, 229, 0, 0.4); }
+  .neon-glow-secondary { box-shadow: 0 0 15px rgba(211, 0, 23, 0.4); }
+  .neon-glow-tertiary { box-shadow: 0 0 15px rgba(156, 0, 213, 0.4); }
+  .energy-flicker { animation: flicker 3s infinite; }
+  @keyframes flicker {
+    0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; border-color: #2ae500; }
+    20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.7; border-color: #107100; }
+  }
+  @keyframes neon-flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; filter: drop-shadow(0 0 10px #2ae500); }
+    20%, 22%, 24%, 55% { opacity: 0.8; filter: none; }
+  }
+  .animate-neon { animation: neon-flicker 3s infinite; }
+  .glass-card { background: rgba(27, 27, 29, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+  .glass-panel { background: rgba(19, 19, 21, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); }
+  .neon-border-purple { border: 1px solid #9c00d5; box-shadow: 0 0 15px rgba(156, 0, 213, 0.2); }
+  .noise-bg { background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png"); opacity: 0.05; }
+  .hidden-force { display: none !important; }
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-thumb { background: #3c4b35; border-radius: 4px; }
+</style>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "secondary-fixed": "#ffdad6", "error": "#ffb4ab", "on-error": "#690005",
+          "primary-fixed": "#79ff5b", "tertiary-fixed": "#f8d8ff", "outline": "#85967c",
+          "on-primary": "#053900", "on-primary-fixed": "#022100", "on-tertiary-fixed-variant": "#74009f",
+          "surface-variant": "#353437", "surface-tint": "#2ae500", "surface-dim": "#131315",
+          "on-secondary": "#690006", "inverse-surface": "#e5e1e4", "on-secondary-fixed": "#410002",
+          "on-secondary-container": "#ffe2de", "on-surface": "#e5e1e4", "on-secondary-fixed-variant": "#93000c",
+          "primary-fixed-dim": "#2ae500", "on-error-container": "#ffdad6", "tertiary": "#fff8fb",
+          "secondary": "#ffb4ab", "primary-container": "#39ff14", "surface-container-lowest": "#0e0e10",
+          "tertiary-container": "#f5d1ff", "surface-container-high": "#2a2a2c", "outline-variant": "#3c4b35",
+          "surface": "#131315", "secondary-container": "#d30017", "on-primary-fixed-variant": "#095300",
+          "surface-container-low": "#1b1b1d", "on-tertiary": "#520072", "on-surface-variant": "#baccb0",
+          "on-tertiary-container": "#9c00d5", "on-background": "#e5e1e4", "tertiary-fixed-dim": "#ebb2ff",
+          "inverse-primary": "#106e00", "surface-container-highest": "#353437", "secondary-fixed-dim": "#ffb4ab",
+          "inverse-on-surface": "#303032", "surface-container": "#201f21", "background": "#131315",
+          "on-primary-container": "#107100", "surface-bright": "#39393b", "error-container": "#93000a",
+          "on-tertiary-fixed": "#320047", "primary": "#efffe3"
+        },
+        borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+        spacing: { sm: "8px", xs: "4px", md: "16px", "margin-safe": "20px", lg: "24px", unit: "4px", gutter: "20px", xl: "48px" },
+        fontFamily: {
+          "body-md": ["Geist"], "label-mono": ["Space Mono"], "headline-md-mobile": ["Montserrat"],
+          "display-lg": ["Montserrat"], "body-lg": ["Geist"], "headline-md": ["Montserrat"], "headline-sm": ["Montserrat"]
+        },
+        fontSize: {
+          "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+          "label-mono": ["12px", { lineHeight: "16px", letterSpacing: "0.1em", fontWeight: "500" }],
+          "headline-md-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+          "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "800" }],
+          "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+          "headline-md": ["28px", { lineHeight: "36px", letterSpacing: "0.03em", fontWeight: "700" }],
+          "headline-sm": ["18px", { lineHeight: "26px", fontWeight: "600" }]
+        }
+      }
+    }
+  }
+</script>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-fixed/30 min-h-screen">
+<div class="fixed inset-0 noise-bg z-0 pointer-events-none"></div>
+<div id="toast" class="hidden-force fixed bottom-24 left-1/2 -translate-x-1/2 z-[999] glass-card border border-secondary-container px-md py-sm rounded-full font-label-mono text-xs text-secondary-fixed max-w-[90vw] text-center"></div>
+
+<!-- ============ SLIDE-IN DRAWER ============ -->
+<nav id="drawer" class="fixed inset-y-0 left-0 z-[70] flex flex-col p-lg w-72 bg-surface-container-lowest/95 backdrop-blur-3xl border-r border-outline-variant/50 -translate-x-full transition-transform duration-300">
+  <div class="flex items-center gap-md mb-xl">
+    <div class="w-11 h-11 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+      <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">person</span>
+    </div>
+    <div>
+      <p id="drawer-name" class="font-headline-sm text-primary-fixed leading-none">플레이어</p>
+      <p class="font-label-mono text-[10px] text-on-surface-variant mt-1">등급: 신참</p>
+    </div>
+  </div>
+  <div class="flex flex-col gap-xs">
+    <div class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant/40 hover:text-primary-fixed transition-all cursor-pointer rounded-lg" id="drawer-lobby">
+      <span class="material-symbols-outlined">sports_esports</span><span class="font-body-md">게임 로비</span>
+    </div>
+    <div class="flex items-center gap-md p-md text-on-surface-variant hover:bg-surface-variant/40 hover:text-primary-fixed transition-all cursor-pointer rounded-lg" id="drawer-rules">
+      <span class="material-symbols-outlined">menu_book</span><span class="font-body-md">규칙서</span>
+    </div>
+  </div>
+  <div class="mt-auto font-label-mono text-[10px] text-outline">COCKROACH POKER v1.0</div>
+</nav>
+<div id="drawer-backdrop" class="hidden-force fixed inset-0 bg-black/50 z-[65]"></div>
+
+<!-- ============ HOME / RULES SCREEN ============ -->
+<section id="screen-home" class="screen relative z-10 min-h-screen flex flex-col">
+  <main class="flex-grow flex items-center justify-center p-md py-xl">
+    <div class="max-w-2xl w-full glass-panel neon-border-purple rounded-xl overflow-hidden">
+      <div class="relative h-40 w-full overflow-hidden bg-gradient-to-br from-surface-container-high to-surface">
+        <div class="absolute inset-0 noise-bg opacity-30"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+        <div class="absolute bottom-0 left-0 p-lg w-full">
+          <p class="font-label-mono text-[10px] tracking-[0.2em] text-outline mb-1">FIELD SPECIMEN LOG NO. 64</p>
+          <h1 class="font-display-lg text-headline-md md:text-display-lg leading-tight text-primary-fixed animate-neon">
+            🪳 바퀴벌레 포커: 속임수의 법칙
+          </h1>
+        </div>
+      </div>
+
+      <div class="p-lg grid grid-cols-1 md:grid-cols-2 gap-lg">
+        <div class="bg-surface-container-high/40 p-md rounded-lg border border-outline-variant/30">
+          <div class="flex items-center gap-sm mb-sm text-primary-fixed">
+            <span class="material-symbols-outlined">emoji_events</span>
+            <h3 class="font-headline-sm text-headline-sm uppercase tracking-wider">게임 목표</h3>
+          </div>
+          <p class="text-on-surface-variant text-sm leading-relaxed">
+            이 게임은 승자가 없는 서바이벌 게임입니다. 목표는 같은 종류의 벌레 카드 4장을 모으지 않고
+            <span class="text-secondary-fixed">'생존'</span>하는 것입니다.
+          </p>
+        </div>
+        <div class="bg-surface-container-high/40 p-md rounded-lg border border-error/20">
+          <div class="flex items-center gap-sm mb-sm text-secondary-fixed">
+            <span class="material-symbols-outlined">warning</span>
+            <h3 class="font-headline-sm text-headline-sm uppercase tracking-wider">패배 조건</h3>
+          </div>
+          <ul class="text-on-surface-variant text-sm space-y-xs list-none">
+            <li class="flex items-start gap-xs"><span class="text-secondary text-sm mt-0.5">▶</span>같은 종류의 카드 4장 수집</li>
+            <li class="flex items-start gap-xs"><span class="text-secondary text-sm mt-0.5">▶</span>본인 차례에 넘길 카드가 없을 때</li>
+          </ul>
+        </div>
+        <div class="md:col-span-2 bg-surface-container-high/40 p-md rounded-lg border border-outline-variant/30">
+          <div class="flex items-center gap-sm mb-md text-primary-fixed">
+            <span class="material-symbols-outlined">sync_alt</span>
+            <h3 class="font-headline-sm text-headline-sm uppercase tracking-wider">본인 차례일 때</h3>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+            <div class="p-sm bg-surface-dim border-l-2 border-primary">
+              <h4 class="font-label-mono text-primary uppercase text-xs mb-1">1. 제안하기</h4>
+              <p class="text-on-surface-variant text-sm">카드 한 장을 뒤집어 건네며 벌레의 이름을 말합니다 (진실 혹은 거짓).</p>
+            </div>
+            <div class="p-sm bg-surface-dim border-l-2 border-tertiary-fixed-dim">
+              <h4 class="font-label-mono text-tertiary-fixed-dim uppercase text-xs mb-1">2. 선언하기</h4>
+              <p class="text-on-surface-variant text-sm">받은 사람은 '진실' 또는 '거짓'을 외칩니다. 틀리면 카드를 가져갑니다.</p>
+            </div>
+            <div class="p-sm bg-surface-dim border-l-2 border-secondary">
+              <h4 class="font-label-mono text-secondary uppercase text-xs mb-1">3. 패스하기</h4>
+              <p class="text-on-surface-variant text-sm">카드를 확인한 뒤, 아직 보지 않은 다른 플레이어에게 넘깁니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Create / Join forms -->
+      <div class="px-lg pb-lg grid grid-cols-1 md:grid-cols-2 gap-lg">
+        <div class="bg-surface-container-high/40 p-md rounded-lg border border-primary-fixed/20">
+          <label class="block font-label-mono text-[10px] uppercase text-outline mb-1">닉네임</label>
+          <input id="input-host-name" type="text" maxlength="16" placeholder="예: 태훈" class="w-full bg-surface-dim border border-outline-variant rounded px-3 py-2 text-sm text-on-surface outline-none focus:border-primary-fixed mb-3"/>
+          <button id="btn-create-room" class="w-full px-xl py-md border-2 border-primary-fixed-dim text-primary-fixed-dim font-headline-sm uppercase tracking-widest hover:bg-primary-container/20 hover:shadow-[0_0_15px_#2ae500] transition-all duration-300 active:scale-95 rounded-lg">
+            방 만들기
+          </button>
+        </div>
+        <div class="bg-surface-container-high/40 p-md rounded-lg border border-secondary-container/30">
+          <label class="block font-label-mono text-[10px] uppercase text-outline mb-1">닉네임</label>
+          <input id="input-join-name" type="text" maxlength="16" placeholder="예: 태훈" class="w-full bg-surface-dim border border-outline-variant rounded px-3 py-2 text-sm text-on-surface outline-none focus:border-secondary-fixed mb-2"/>
+          <label class="block font-label-mono text-[10px] uppercase text-outline mb-1">방 번호</label>
+          <input id="input-room-code" type="text" maxlength="5" placeholder="NX-402" style="text-transform:uppercase" class="w-full bg-surface-dim border border-outline-variant rounded px-3 py-2 text-sm text-on-surface outline-none focus:border-secondary-fixed mb-3"/>
+          <button id="btn-join-room" class="w-full px-xl py-md bg-secondary-container text-on-secondary-container font-headline-sm uppercase tracking-widest hover:bg-secondary-container/80 transition-all duration-300 active:scale-95 rounded-lg">
+            방 입장하기
+          </button>
+        </div>
+      </div>
+
+      <div class="p-lg bg-surface-container-lowest/80 flex flex-col items-center justify-center border-t border-outline-variant/30">
+        <button id="btn-vs-ai" class="w-full md:w-auto px-xl py-md border border-outline text-outline font-label-mono uppercase hover:text-on-surface hover:border-on-surface transition-all rounded-lg">
+          🤖 AI와 대결
+        </button>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- ============ WAITING ROOM SCREEN ============ -->
+<section id="screen-waiting" class="screen hidden-force relative z-10 min-h-screen">
+  <header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0_0_15px_rgba(42,229,0,0.2)] flex justify-between items-center px-lg py-sm">
+    <div class="flex items-center gap-md">
+      <span class="material-symbols-outlined text-primary-fixed cursor-pointer" id="waiting-menu-btn">grid_view</span>
+      <div class="flex flex-col">
+        <h1 class="font-headline-sm text-headline-sm text-primary tracking-tight">방 번호: <span id="waiting-room-code">-----</span></h1>
+        <span class="font-label-mono text-[10px] text-outline uppercase" id="waiting-status">로비 상태: 0/8 접속 중</span>
+      </div>
+    </div>
+    <button id="btn-leave-waiting" class="group flex items-center gap-xs bg-secondary-container/20 border border-secondary-container text-secondary-fixed-dim px-md py-xs rounded-full hover:bg-secondary-container transition-all active:scale-95">
+      <span class="material-symbols-outlined text-sm">logout</span>
+      <span class="font-label-mono text-xs font-bold">방 나가기</span>
+    </button>
+  </header>
+
+  <main class="pt-[88px] pb-xl px-md max-w-2xl mx-auto">
+    <h2 class="font-headline-md text-headline-md text-primary-fixed mb-1">대기실</h2>
+    <p class="font-body-md text-on-surface-variant text-sm mb-lg">2~6명이 필요합니다. 봇을 추가해 혼자서도 즐길 수 있어요.</p>
+
+    <ul id="waiting-player-list" class="flex flex-col gap-sm mb-xl"></ul>
+
+    <div id="host-controls" class="hidden-force flex flex-wrap gap-md">
+      <button id="btn-add-bot" class="px-lg py-3 border border-tertiary-fixed/40 text-tertiary-fixed font-label-mono rounded-xl hover:bg-tertiary-fixed/10 transition-all active:scale-95">+ 봇 추가</button>
+      <button id="btn-start-game" class="px-lg py-3 bg-primary-container text-on-primary-container font-headline-sm rounded-xl neon-glow-primary border border-primary-fixed/50 transition-all hover:scale-105 active:scale-95" disabled>게임 시작</button>
+      <button id="btn-delete-room" class="px-lg py-3 border border-secondary-container text-secondary-fixed font-label-mono rounded-xl hover:bg-secondary-container/20 transition-all active:scale-95">방 삭제</button>
+    </div>
+    <p id="non-host-hint" class="hidden-force font-label-mono text-xs text-outline">호스트가 게임을 시작하기를 기다리는 중...</p>
+  </main>
+</section>
+
+<!-- ============ GAME TABLE SCREEN ============ -->
+<section id="screen-game" class="screen hidden-force relative z-10 w-full min-h-screen overflow-hidden">
+  <header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-[0_0_15px_rgba(42,229,0,0.2)] flex justify-between items-center px-lg py-sm">
+    <div class="flex items-center gap-md">
+      <span class="material-symbols-outlined text-primary-fixed cursor-pointer" id="game-menu-btn">grid_view</span>
+      <div class="flex flex-col">
+        <h1 class="font-headline-sm text-headline-sm text-primary tracking-tight">방 번호: <span id="game-room-code">-----</span></h1>
+        <span id="turn-indicator" class="font-label-mono text-[10px] text-outline uppercase">—</span>
+      </div>
+    </div>
+    <button id="btn-leave-game" class="group flex items-center gap-xs bg-secondary-container/20 border border-secondary-container text-secondary-fixed-dim px-md py-xs rounded-full hover:bg-secondary-container transition-all active:scale-95">
+      <span class="material-symbols-outlined text-sm">logout</span>
+      <span class="font-label-mono text-xs font-bold hidden md:inline">방 나가기</span>
+    </button>
+  </header>
+
+  <main class="relative z-10 w-full pt-[80px] pb-[220px] flex flex-col items-center px-md">
+    <!-- Opponents -->
+    <div id="opponents-row" class="w-full max-w-5xl flex flex-wrap justify-center gap-md mb-lg"></div>
+
+    <!-- Central Arena -->
+    <div class="relative w-full max-w-md flex-1 flex flex-col items-center justify-center py-lg">
+      <div id="arena-idle" class="hidden-force text-center">
+        <span class="material-symbols-outlined text-6xl text-outline-variant opacity-40">hourglass_empty</span>
+        <p class="font-label-mono text-xs text-outline mt-sm" id="arena-idle-text">다음 차례를 기다리는 중...</p>
+      </div>
+
+      <div id="arena-pending" class="hidden-force flex flex-col items-center">
+        <div class="w-32 h-48 rounded-xl border-2 border-tertiary-fixed neon-glow-tertiary bg-surface-container-low flex flex-col items-center justify-center rotate-3 transition-transform hover:rotate-0 cursor-help relative overflow-hidden">
+          <span class="material-symbols-outlined text-tertiary-fixed text-5xl opacity-40">pest_control</span>
+          <div class="absolute inset-0 noise-bg opacity-20"></div>
+        </div>
+        <div class="mt-4 bg-surface-container-highest/90 backdrop-blur-md border-l-4 border-primary-fixed px-6 py-3 rounded-r-lg shadow-xl max-w-xs text-center md:text-left">
+          <p class="font-label-mono text-sm" id="pending-claim-text">—</p>
+        </div>
+      </div>
+
+      <div id="arena-mycard" class="hidden-force flex flex-col items-center">
+        <div class="w-32 h-48 rounded-xl border-2 border-primary-fixed neon-glow-primary bg-surface-container-low flex flex-col items-center justify-center relative overflow-hidden">
+          <span id="my-pending-card-emoji" class="text-6xl"></span>
+          <span id="my-pending-card-label" class="font-label-mono text-[10px] text-on-surface-variant mt-2"></span>
+        </div>
+        <p class="font-label-mono text-xs text-outline mt-sm">상대가 <span id="my-pending-declared" class="text-secondary-fixed font-bold"></span>(이)라고 주장했습니다</p>
+      </div>
+    </div>
+
+    <!-- Action Buttons (guess / pass) -->
+    <div id="holder-actions" class="hidden-force w-full max-w-md flex flex-col gap-sm mb-lg">
+      <button id="btn-guess-truth" class="w-full py-4 bg-primary-container text-on-primary-container font-headline-sm rounded-xl neon-glow-primary border border-primary-fixed/50 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-md">
+        <span class="material-symbols-outlined">check_circle</span> 진실
+      </button>
+      <button id="btn-guess-lie" class="w-full py-4 bg-secondary-container text-on-secondary-container font-headline-sm rounded-xl neon-glow-secondary border border-secondary-fixed/30 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-md">
+        <span class="material-symbols-outlined">cancel</span> 거짓
+      </button>
+      <button id="btn-open-pass" class="w-full py-3 bg-transparent border-2 border-tertiary-fixed/40 text-tertiary-fixed font-label-mono rounded-xl hover:bg-tertiary-fixed/10 transition-all active:scale-95 flex items-center justify-center gap-sm">
+        <span class="material-symbols-outlined text-sm">visibility</span> 확인 후 패스
+      </button>
+      <p id="must-guess-note" class="hidden-force font-label-mono text-[11px] text-outline text-center">더 이상 넘길 상대가 없습니다 — 반드시 판정해야 합니다.</p>
+    </div>
+
+    <!-- Start-turn CTA -->
+    <div id="turn-cta" class="hidden-force w-full max-w-md mb-lg">
+      <button id="btn-open-propose" class="w-full py-4 bg-primary-container text-on-primary-container font-headline-sm rounded-xl neon-glow-primary border border-primary-fixed/50 transition-all hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-md">
+        <span class="material-symbols-outlined">front_hand</span> 카드 제안하기
+      </button>
+    </div>
+
+    <div class="log-panel w-full max-w-md glass-card rounded-lg p-md">
+      <div class="font-label-mono text-[10px] uppercase text-outline mb-2">현장 기록</div>
+      <div id="log-feed" class="flex flex-col-reverse gap-1 max-h-32 overflow-y-auto"></div>
+    </div>
+  </main>
+
+  <!-- Hand Dock -->
+  <section class="fixed bottom-0 left-0 w-full z-40 px-margin-safe pb-md pointer-events-none">
+    <div class="max-w-5xl mx-auto pointer-events-auto">
+      <div id="my-facecards" class="flex flex-wrap gap-xs justify-center mb-2"></div>
+      <div id="my-hand" class="flex justify-center items-end gap-2 overflow-x-auto pb-1"></div>
+    </div>
+  </section>
+</section>
+
+<!-- ============ PROPOSE MODAL (start turn) ============ -->
+<div id="modal-propose" class="hidden-force fixed inset-0 z-[80] flex items-end md:items-center justify-center bg-black/60 backdrop-blur-sm p-0 md:p-md">
+  <div class="glass-panel neon-border-purple w-full md:max-w-md rounded-t-2xl md:rounded-2xl p-lg max-h-[85vh] overflow-y-auto">
+    <h3 class="font-headline-sm text-headline-sm text-primary-fixed mb-1">카드 제안하기</h3>
+    <p class="font-label-mono text-[11px] text-outline mb-md">선택한 카드: <span id="propose-selected-card" class="text-primary-fixed">—</span></p>
+
+    <div class="mb-md">
+      <div class="font-label-mono text-[10px] uppercase text-outline mb-2">1. 대상 선택</div>
+      <div id="propose-target-grid" class="flex flex-wrap gap-2"></div>
+    </div>
+    <div class="mb-lg">
+      <div class="font-label-mono text-[10px] uppercase text-outline mb-2">2. 벌레 이름 선언 (진실 또는 거짓)</div>
+      <div id="propose-declare-grid" class="grid grid-cols-4 gap-2"></div>
+    </div>
+    <div class="flex gap-sm">
+      <button id="btn-cancel-propose" class="flex-1 py-3 border border-outline-variant text-outline rounded-xl font-label-mono">취소</button>
+      <button id="btn-confirm-propose" class="flex-1 py-3 bg-primary-container text-on-primary-container rounded-xl font-headline-sm neon-glow-primary" disabled>제안하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PASS MODAL ============ -->
+<div id="modal-pass" class="hidden-force fixed inset-0 z-[80] flex items-end md:items-center justify-center bg-black/60 backdrop-blur-sm p-0 md:p-md">
+  <div class="glass-panel neon-border-purple w-full md:max-w-md rounded-t-2xl md:rounded-2xl p-lg max-h-[85vh] overflow-y-auto">
+    <h3 class="font-headline-sm text-headline-sm text-tertiary-fixed-dim mb-1">확인 후 패스</h3>
+    <p class="font-label-mono text-[11px] text-outline mb-md">이 카드를 아직 보지 않은 사람에게 넘깁니다. 주장을 유지하거나 바꿀 수 있어요.</p>
+
+    <div class="mb-md">
+      <div class="font-label-mono text-[10px] uppercase text-outline mb-2">1. 대상 선택</div>
+      <div id="pass-target-grid" class="flex flex-wrap gap-2"></div>
+    </div>
+    <div class="mb-lg">
+      <div class="font-label-mono text-[10px] uppercase text-outline mb-2">2. 벌레 이름 선언</div>
+      <div id="pass-declare-grid" class="grid grid-cols-4 gap-2"></div>
+    </div>
+    <div class="flex gap-sm">
+      <button id="btn-cancel-pass" class="flex-1 py-3 border border-outline-variant text-outline rounded-xl font-label-mono">취소</button>
+      <button id="btn-confirm-pass" class="flex-1 py-3 bg-tertiary-container text-on-tertiary-container rounded-xl font-headline-sm neon-glow-tertiary" disabled>패스하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ GAME OVER SCREEN ============ -->
+<section id="screen-over" class="screen hidden-force relative z-10 min-h-screen flex items-center justify-center p-md">
+  <div class="glass-panel neon-border-purple rounded-xl max-w-md w-full p-lg text-center">
+    <p class="font-label-mono text-[10px] tracking-[0.2em] text-outline mb-2">SPECIMEN LOG CLOSED</p>
+    <h2 id="over-title" class="font-display-lg text-headline-md text-secondary-fixed mb-2">게임 종료</h2>
+    <p id="over-reason" class="font-label-mono text-xs text-on-surface-variant mb-lg"></p>
+    <div id="over-standings" class="flex flex-col gap-xs mb-lg text-left"></div>
+    <div class="flex flex-col md:flex-row gap-sm justify-center">
+      <button id="btn-rematch" class="hidden-force px-xl py-md bg-primary-container text-on-primary-container font-headline-sm rounded-xl neon-glow-primary">리매치</button>
+      <button id="btn-back-home" class="px-xl py-md border border-outline text-outline font-label-mono rounded-xl">로비로 돌아가기</button>
+    </div>
+  </div>
+</section>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/client.js"></script>
+</body>
+</html>
