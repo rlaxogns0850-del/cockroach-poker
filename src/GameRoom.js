@@ -271,8 +271,9 @@ class GameRoom {
       return this.lastResolution;
     }
 
-    // Next round is started by whoever just resolved the exchange (the guesser).
-    this.activePlayerId = guesserId;
+    // Per official rules: whoever just took the face-up card (the "loser" of this
+    // exchange) starts the next round by proposing a card to someone else.
+    this.activePlayerId = recipientId;
     this._checkHandEmptyAtTurnStart();
     return this.lastResolution;
   }

@@ -1,7 +1,7 @@
 {
   "name": "cockroach-poker",
   "version": "1.0.0",
-  "description": "Web-based Cockroach Poker (\uBC14\uAD34\uBC8C\uB808 \uD3EC\uCEE4) with AI bots and real-time multiplayer rooms",
+  "description": "Web-based Cockroach Poker (바괴벌레 포커) with AI bots and real-time multiplayer rooms",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -13,5 +13,8 @@
   "dependencies": {
     "express": "^4.19.2",
     "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.3"
   }
 }

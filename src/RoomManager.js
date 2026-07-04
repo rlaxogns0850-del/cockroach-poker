@@ -109,16 +109,18 @@ class RoomManager {
         if (decision.action === 'pass') {
           current.respondPass(botId, decision.targetId, decision.declaredType);
         } else {
-          current._resolveGuessSafe = true;
           current.respondGuess(botId, decision.guessedTruth);
         }
       } catch (err) {
+        console.error(`[bot ${botId}] response action failed (${err.message}); forcing a guess fallback`);
         // Fallback: if the chosen action was somehow invalid, force a guess.
         if (current.pending && current.pending.currentHolderId === botId) {
           try {
             current.respondGuess(botId, Math.random() < 0.5);
-          } catch (_) {
-            /* ignore */
+          } catch (err2) {
+            console.error(`[bot ${botId}] guess fallback also failed (${err2.message}); retrying shortly`);
+            // Last resort: retry the whole decision loop shortly instead of freezing the game.
+            setTimeout(() => this._maybeTriggerBots(current), 500);
           }
         }
       }
@@ -136,11 +138,17 @@ class RoomManager {
 
       const bot = current._getPlayer(botId);
       const decision = AIBot.decideTurn(bot, current);
-      if (!decision) return;
+      if (!decision) {
+        console.error(`[bot ${botId}] could not decide a turn (no valid targets/cards); retrying shortly`);
+        setTimeout(() => this._maybeTriggerBots(current), 500);
+        return;
+      }
 
       try {
         current.startTurn(botId, decision.targetId, decision.cardId, decision.declaredType);
       } catch (err) {
+        console.error(`[bot ${botId}] startTurn failed (${err.message}); retrying shortly`);
+        setTimeout(() => this._maybeTriggerBots(current), 500);
         return;
       }
 
